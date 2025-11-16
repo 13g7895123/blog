@@ -161,12 +161,12 @@
 
 ### 實作使用者故事 5
 
-- [ ] T039 [P] [US5] 建立 TagSidebar 元件在 components/TagSidebar.vue（使用 useTag.getActiveTagsWithCount，顯示標籤列表、文章數量、當前選中狀態）
-- [ ] T040 [P] [US5] 建立預設版面配置在 layouts/default.vue（包含主要內容區域與 TagSidebar，響應式設計）
-- [ ] T041 [US5] 建立標籤篩選頁面在 pages/tags/[slug].vue（使用 usePost.getArticlesByTag 與 useTag.getTagBySlug，顯示篩選後的文章列表）
-- [ ] T042 [US5] 實作標籤計數邏輯（計算每個標籤關聯的文章數量）在 useTag composable 的 getActiveTagsWithCount 方法中
-- [ ] T043 [US5] 實作活躍標籤篩選（只顯示 count > 0 的標籤）在 useTag composable 的 getActiveTagsWithCount 方法中
-- [ ] T044 [US5] 新增側邊欄樣式（Tailwind CSS，固定位置、響應式收合、標籤計數徽章）在 TagSidebar.vue 中
+- [X] T039 [P] [US5] 建立 TagSidebar 元件在 components/TagSidebar.vue（使用 useTag.getActiveTagsWithCount，顯示標籤列表、文章數量、當前選中狀態）
+- [X] T040 [P] [US5] 建立預設版面配置在 layouts/default.vue（包含主要內容區域與 TagSidebar，響應式設計）
+- [X] T041 [US5] 建立標籤篩選頁面在 pages/tags/[slug].vue（使用 usePost.getArticlesByTag 與 useTag.getTagBySlug，顯示篩選後的文章列表）
+- [X] T042 [US5] 實作標籤計數邏輯（計算每個標籤關聯的文章數量）在 useTag composable 的 getActiveTagsWithCount 方法中
+- [X] T043 [US5] 實作活躍標籤篩選（只顯示 count > 0 的標籤）在 useTag composable 的 getActiveTagsWithCount 方法中
+- [X] T044 [US5] 新增側邊欄樣式（Tailwind CSS，固定位置、響應式收合、標籤計數徽章）在 TagSidebar.vue 中
 
 **檢查點**：讀者可以透過標籤輕鬆探索和瀏覽文章
 
