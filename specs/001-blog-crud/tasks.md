@@ -100,11 +100,11 @@
 
 ### 實作使用者故事 2
 
-- [ ] T023 [P] [US2] 建立 ArticleCard 元件在 components/ArticleCard.vue（顯示標題、建立日期、摘要、標籤，點擊導航到文章頁面）
-- [ ] T024 [P] [US2] 建立 ArticleList 元件在 components/ArticleList.vue（渲染 ArticleCard 陣列、按 createdAt 排序、空狀態提示）
-- [ ] T025 [US2] 建立首頁在 pages/index.vue（使用 usePost.fetchArticles，使用 ArticleList 元件，顯示載入狀態）
-- [ ] T026 [US2] 實作文章摘要生成邏輯（前 200 字元 + "..."），在 usePost composable 的 getArticleSummaries 方法中
-- [ ] T027 [US2] 新增空狀態處理（當文章列表為空時顯示「尚無文章」提示），在 ArticleList.vue 中
+- [X] T023 [P] [US2] 建立 ArticleCard 元件在 components/ArticleCard.vue（顯示標題、建立日期、摘要、標籤，點擊導航到文章頁面）
+- [X] T024 [P] [US2] 建立 ArticleList 元件在 components/ArticleList.vue（渲染 ArticleCard 陣列、按 createdAt 排序、空狀態提示）
+- [X] T025 [US2] 建立首頁在 pages/index.vue（使用 usePost.fetchArticles，使用 ArticleList 元件，顯示載入狀態）
+- [X] T026 [US2] 實作文章摘要生成邏輯（前 200 字元 + "..."），在 usePost composable 的 getArticleSummaries 方法中
+- [X] T027 [US2] 新增空狀態處理（當文章列表為空時顯示「尚無文章」提示），在 ArticleList.vue 中
 
 **檢查點**：此時使用者故事 1 和 2 應同時正常運作且可獨立測試
 
