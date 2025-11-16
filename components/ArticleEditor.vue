@@ -84,28 +84,11 @@
 
       <!-- 標籤選擇 -->
       <div v-if="showTagInput">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          標籤
-        </label>
-        <div class="flex flex-wrap gap-2 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800">
-          <div
-            v-for="tagId in form.tagIds"
-            :key="tagId"
-            class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-          >
-            {{ getTagName(tagId) }}
-            <button
-              type="button"
-              @click.prevent="removeTag(tagId)"
-              class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-            >
-              ✕
-            </button>
-          </div>
-          <p v-if="form.tagIds.length === 0" class="text-sm text-gray-500 dark:text-gray-400">
-            未選擇標籤
-          </p>
-        </div>
+        <TagInput
+          :tags="props.tags"
+          :selected-tag-ids="form.tagIds"
+          @update:selected-tag-ids="updateSelectedTags"
+        />
       </div>
 
       <!-- 錯誤提示 -->
@@ -249,6 +232,10 @@ const removeTag = (tagId: string) => {
 
 const getTagName = (tagId: string): string => {
   return props.tags.find(t => t.id === tagId)?.name ?? '未知標籤'
+}
+
+const updateSelectedTags = (tagIds: string[]) => {
+  form.value.tagIds = tagIds
 }
 
 // 表單提交

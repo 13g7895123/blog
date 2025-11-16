@@ -140,12 +140,12 @@
 
 ### 實作使用者故事 4
 
-- [ ] T033 [P] [US4] 實作 useTag composable 在 composables/useTag.ts（fetchTags, getTagById, getTagBySlug, createTag, deleteTag, getTagsWithCount, getActiveTagsWithCount 方法）
-- [ ] T034 [P] [US4] 建立 TagInput 元件在 components/TagInput.vue（輸入標籤、建立新標籤、顯示已選標籤、移除標籤、自動完成建議）
-- [ ] T035 [US4] 整合 TagInput 到 ArticleEditor.vue（綁定 tagIds 屬性、在儲存時一併儲存標籤）
-- [ ] T036 [US4] 實作 Slug 生成策略（中文轉拼音、URL 友善）在 utils/slugify.ts 的 slugify 函式中
-- [ ] T037 [US4] 實作標籤驗證（名稱長度 1-50 字元、避免重複標籤）在 utils/validation.ts 中
-- [ ] T038 [US4] 更新 ArticleViewer.vue 顯示文章的標籤（標籤列表、可點擊導航到標籤篩選頁）
+- [X] T033 [P] [US4] 實作 useTag composable 在 composables/useTag.ts（fetchTags, getTagById, getTagBySlug, createTag, deleteTag, getTagsWithCount, getActiveTagsWithCount 方法）
+- [X] T034 [P] [US4] 建立 TagInput 元件在 components/TagInput.vue（輸入標籤、建立新標籤、顯示已選標籤、移除標籤、自動完成建議）
+- [X] T035 [US4] 整合 TagInput 到 ArticleEditor.vue（綁定 tagIds 屬性、在儲存時一併儲存標籤）
+- [X] T036 [US4] 實作 Slug 生成策略（中文轉拼音、URL 友善）在 utils/slugify.ts 的 slugify 函式中
+- [X] T037 [US4] 實作標籤驗證（名稱長度 1-50 字元、避免重複標籤）在 utils/validation.ts 中
+- [X] T038 [US4] 更新 ArticleViewer.vue 顯示文章的標籤（標籤列表、可點擊導航到標籤篩選頁）
 
 **檢查點**：文章可以被正確分類，標籤系統完全功能正常
 
