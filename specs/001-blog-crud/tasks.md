@@ -29,15 +29,15 @@
 
 **目的**：專案初始化與基本結構建立
 
-- [ ] T001 根據 plan.md 建立專案目錄結構（composables/, components/, pages/, types/, utils/, tests/）
-- [ ] T002 初始化 Nuxt 3 專案並安裝核心相依套件（Vue 3, TypeScript, Tailwind CSS, marked, DOMPurify, Vitest, ESLint, Prettier）
-- [ ] T003 [P] 設定 ESLint 與 Prettier 規則（.eslintrc.cjs, .prettierrc）
-- [ ] T004 [P] 設定 Tailwind CSS（tailwind.config.ts，定義顏色、字型、間距）
-- [ ] T005 [P] 設定 TypeScript（tsconfig.json，嚴格模式、路徑別名）
-- [ ] T006 [P] 設定 Vitest（vitest.config.ts，Vue 元件測試支援）
-- [ ] T007 [P] 建立 Nuxt 設定檔（nuxt.config.ts，模組、Tailwind、TypeScript、開發伺服器）
+- [X] T001 根據 plan.md 建立專案目錄結構（composables/, components/, pages/, types/, utils/, tests/）
+- [X] T002 初始化 Nuxt 3 專案並安裝核心相依套件（Vue 3, TypeScript, Tailwind CSS, marked, DOMPurify, Vitest, ESLint, Prettier）
+- [X] T003 [P] 設定 ESLint 與 Prettier 規則（eslint.config.mjs, .prettierrc）
+- [X] T004 [P] 設定 Tailwind CSS（tailwind.config.ts，定義顏色、字型、間距）
+- [X] T005 [P] 設定 TypeScript（tsconfig.json，嚴格模式、路徑別名）
+- [X] T006 [P] 設定 Vitest（vitest.config.ts，Vue 元件測試支援）
+- [X] T007 [P] 建立 Nuxt 設定檔（nuxt.config.ts，模組、Tailwind、TypeScript、開發伺服器）
 
-**檢查點**：專案結構與工具鏈設置完成，可開始開發
+**檢查點**：✅ 專案結構與工具鏈設置完成，可開始開發
 
 ---
 
@@ -49,23 +49,23 @@
 
 ### 型別定義（Data Access Layer 基礎）
 
-- [ ] T008 [P] 建立 Article 型別定義在 types/article.ts（Article, CreateArticleInput, UpdateArticleInput, ArticleSummary）
-- [ ] T009 [P] 建立 Tag 型別定義在 types/tag.ts（Tag, TagWithCount, CreateTagInput）
-- [ ] T010 [P] 建立 API 錯誤型別定義在 types/api.ts（StorageError, ValidationError, NotFoundError, QuotaExceededError）
+- [X] T008 [P] 建立 Article 型別定義在 types/article.ts（Article, CreateArticleInput, UpdateArticleInput, ArticleSummary）
+- [X] T009 [P] 建立 Tag 型別定義在 types/tag.ts（Tag, TagWithCount, CreateTagInput）
+- [X] T010 [P] 建立 API 錯誤型別定義在 types/api.ts（StorageError, ValidationError, NotFoundError, QuotaExceededError）
 
 ### 工具函式（共用邏輯）
 
-- [ ] T011 [P] 實作資料驗證工具在 utils/validation.ts（validateArticle, validateTag, validateTitle, validateContent）
-- [ ] T012 [P] 實作 Slug 生成工具在 utils/slugify.ts（slugify 函式，中文轉拼音，URL 友善）
-- [ ] T013 [P] 實作 Markdown 渲染工具在 utils/markdown.ts（renderMarkdown 函式，marked + DOMPurify，XSS 防護）
-- [ ] T014 [P] 實作 localStorage 輔助函式在 utils/storage.ts（safe get/set/remove，quota 檢查）
+- [X] T011 [P] 實作資料驗證工具在 utils/validation.ts（validateArticle, validateTag, validateTitle, validateContent）
+- [X] T012 [P] 實作 Slug 生成工具在 utils/slugify.ts（slugify 函式，中文轉拼音，URL 友善）
+- [X] T013 [P] 實作 Markdown 渲染工具在 utils/markdown.ts（renderMarkdown 函式，marked + DOMPurify，XSS 防護）
+- [X] T014 [P] 實作 localStorage 輔助函式在 utils/storage.ts（safe get/set/remove，quota 檢查）
 
 ### 核心 Composables（資料存取層）
 
-- [ ] T015 實作 useApi composable 在 composables/useApi.ts（get, set, remove, clear, isAvailable 方法，localStorage 實作）
-- [ ] T016 實作 useStorageMonitor composable 在 composables/useStorageMonitor.ts（監控 localStorage 使用率，80% 警告）
+- [X] T015 實作 useApi composable 在 composables/useApi.ts（get, set, remove, clear, isAvailable 方法，localStorage 實作）
+- [X] T016 實作 useStorageMonitor composable 在 composables/useStorageMonitor.ts（監控 localStorage 使用率，80% 警告）
 
-**檢查點**：基礎設施就緒 - 使用者故事實作現在可以平行開始
+**檢查點**：✅ 基礎設施就緒 - 使用者故事實作現在可以平行開始
 
 ---
 

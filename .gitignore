@@ -1,0 +1,52 @@
+# Nuxt dev/build outputs
+.output
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# OS
+.DS_Store
+.fleet
+.idea
+
+# Vim
+*.swp
+*.swo
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor folders
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# Test coverage
+coverage
+*.lcov
+.nyc_output
+
+# Temporary files
+*.tmp
+*.temp
+~*
+
+# Lock files (keep pnpm-lock.yaml for consistency)
+package-lock.json
+yarn.lock
