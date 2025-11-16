@@ -1,50 +1,128 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+同步影響報告
+==================
+版本變更：初始版本 → 1.1.0
+變更類型：MINOR（新增繁體中文語言要求原則）
+日期：2025-11-16
 
-## Core Principles
+已定義原則：
+  1. 程式碼品質標準 - 既有
+  2. 測試標準 - 既有
+  3. 使用者體驗一致性 - 既有
+  4. 效能要求 - 既有
+  5. 文件語言標準 - 新增
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+範本狀態：
+  ⚠ plan-template.md - 需更新為繁體中文
+  ⚠ spec-template.md - 需更新為繁體中文
+  ⚠ tasks-template.md - 需更新為繁體中文
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+後續行動：所有範本文件需翻譯為繁體中文
+-->
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+# 部落格專案憲章
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+## 核心原則
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### 一、程式碼品質標準
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+所有貢獻至本專案的程式碼必須符合以下不可協商的品質要求：
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- **可讀性優先**：程式碼被閱讀的頻率遠高於撰寫。使用清晰的命名、一致的格式化和自我說明的模式。不鼓勵聰明的程式碼；清晰的程式碼是必須的。
+- **可維護性**：每個模組必須可以獨立理解。避免緊密耦合；優先使用組合而非繼承。用行內註解記錄不明顯的決策。
+- **程式碼檢查與格式化**：所有程式碼必須通過配置的檢查工具且無警告。提交前必須套用自動格式化工具。無例外。
+- **程式碼審查**：所有變更都需要同儕審查。審查者必須在批准前驗證是否符合這些標準。
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**理由說明**：部落格專案因迭代內容變更和功能新增而快速累積技術債。從第一天就執行品質標準可防止程式碼庫變得無法維護。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### 二、測試標準
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+本專案遵循測試意識開發方法，具有以下強制性實踐：
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- **測試覆蓋率**：關鍵使用者路徑（內容渲染、導航、搜尋）必須有自動化測試。核心功能目標為 80% 以上的覆蓋率。
+- **測試類型**：工具程式/邏輯的單元測試、API/資料庫互動的整合測試、關鍵使用者旅程的端到端測試。
+- **測試優先（當有要求時）**：當規格明確要求測試時，必須在實作之前撰寫測試。驗證測試失敗，然後實作使其通過（紅燈-綠燈-重構）。
+- **不允許失敗的測試**：合併前所有測試必須通過。跳過/停用的測試需要有文件記錄的理由及解決時程。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**理由說明**：部落格涉及頻繁的內容更新、模板變更和外掛整合。全面的測試確保變更不會破壞現有功能，並能自信地迭代。
+
+### 三、使用者體驗一致性
+
+部落格的使用者介面方面必須保持一致性和品質：
+
+- **設計系統**：所有 UI 元件必須遵循定義的設計系統（顏色、排版、間距、互動模式）。偏離設計系統需記錄理由。
+- **無障礙性**：必須符合 WCAG 2.1 Level AA 標準。語義化 HTML、鍵盤導航、螢幕閱讀器相容性和足夠的色彩對比是必須的。
+- **效能**：頁面必須在標準寬頻連線下於 3 秒內載入。核心網頁指標（LCP、FID、CLS）必須達到「良好」門檻。
+- **響應式設計**：所有頁面必須在行動裝置（320px+）、平板（768px+）和桌面（1024px+）視窗上完全功能。
+- **內容完整性**：正式環境中對損壞的連結、遺失的圖片或錯誤的版面配置零容忍。
+
+**理由說明**：使用者信任和參與度取決於一致、無障礙和高效能的體驗。部落格讀者對不良的使用者體驗容忍度低，會放棄有可用性問題的網站。
+
+### 四、效能要求
+
+部落格必須達到以下效能基準：
+
+- **頁面載入時間**：初始頁面載入 ≤ 3 秒（LCP < 2.5s）。後續導航 ≤ 1 秒。
+- **建置時間**：少於 500 篇文章的儲存庫，靜態網站建置必須在 5 分鐘內完成。優先使用增量建置（如有支援）。
+- **圖片最佳化**：所有圖片必須最佳化（優先使用 WebP/AVIF）並提供響應式 srcset。折疊線下方的圖片必須延遲載入。
+- **套件大小**：初始頁面載入的 JavaScript 套件 ≤ 200KB gzipped。CSS ≤ 50KB gzipped。
+- **快取策略**：對靜態資源實施積極的快取（1 年），對動態內容實施合理的快取（使用 ETags/Last-Modified 驗證）。
+
+**理由說明**：效能直接影響 SEO 排名、使用者留存率和無障礙性。緩慢的部落格會讓使用者感到挫折，並在搜尋引擎中排名不佳。這些基準在現代網路期望和實際實作限制之間取得平衡。
+
+### 五、文件語言標準
+
+本專案的所有使用者面向文件必須使用繁體中文（zh-TW）：
+
+- **規格文件**：所有功能規格、使用者故事、驗收條件必須以繁體中文撰寫。
+- **計畫文件**：實作計畫、技術設計、架構決策必須以繁體中文記錄。
+- **使用者文件**：README、快速入門指南、API 文件、使用手冊必須以繁體中文提供。
+- **程式碼註解**：公開 API 和複雜邏輯的註解建議使用繁體中文，以提高團隊可讀性。
+- **範本文件**：所有 `.specify/templates/` 中的範本必須使用繁體中文。
+
+**理由說明**：使用專案團隊和目標使用者的母語可提高溝通效率、減少誤解，並確保所有利害關係人都能完全理解專案要求和文件。
+
+## 開發工作流程
+
+### 品質關卡
+
+所有功能分支在合併前必須通過以下關卡：
+
+1. **憲章檢查**：驗證是否符合所有五項核心原則（盡可能透過 CI 自動化）。
+2. **程式碼審查**：至少獲得一位維護者的批准，該維護者已驗證是否符合程式碼品質和測試標準。
+3. **自動化測試**：所有 CI 測試通過（程式碼檢查、單元測試、整合測試、e2e 測試，視情況而定）。
+4. **效能驗證**：Lighthouse CI 檢查通過（效能 ≥ 90、無障礙性 = 100、最佳實踐 ≥ 90）。
+5. **手動測試**：對於 UI 變更，審查者必須在行動裝置和桌面視窗上驗證。
+
+### 複雜度說明
+
+引入似乎違反原則的複雜度（例如：跳過原型的測試、對一次性元件使用行內樣式）必須在實作計畫的「複雜度追蹤」表格中記錄：
+
+| 違規項目 | 為何需要 | 拒絕較簡單替代方案的原因 | 解決時程 |
+|---------|---------|------------------------|---------|
+| [範例] | [理由] | [替代方案說明] | [何時修復] |
+
+## 治理
+
+### 憲章權威
+
+本憲章優先於所有其他實踐、慣例或偏好。當發生衝突時，憲章優先。應透過參考理由說明部分來解決歧義。
+
+### 修正程序
+
+1. **提案**：以 GitHub issue 形式提交修正案，包含理由、影響分析和建議的版本編號（MAJOR/MINOR/PATCH）。
+2. **討論**：利害關係人至少 7 天的評論期。
+3. **批准**：需要專案維護者一致同意。
+4. **遷移**：批准的修正案必須包含現有程式碼/流程的遷移計畫。
+5. **版本編號**：遵循語義化版本更新憲章版本：
+   - **MAJOR**：向後不相容的變更（移除/重新定義原則）。
+   - **MINOR**：附加變更（新原則、擴充指引）。
+   - **PATCH**：澄清、錯字修正、非語義改進。
+
+### 合規審查
+
+- **合併前**：所有 PR 透過品質關卡流程進行憲章合規審查。
+- **季度稽核**：每季進行一次程式碼庫稽核，以識別偏離原則的情況並安排補救。
+- **指標**：追蹤關鍵指標（測試覆蓋率 %、Lighthouse 分數、建置時間）並標記退步。
+
+**版本**：1.1.0 | **批准日期**：2025-11-16 | **最後修正**：2025-11-16
