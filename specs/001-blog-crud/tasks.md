@@ -182,11 +182,11 @@
 
 ### 實作使用者故事 6
 
-- [ ] T045 [P] [US6] 建立 ConfirmDialog 元件在 components/ConfirmDialog.vue（顯示確認訊息、取消與確認按鈕、關閉邏輯）
-- [ ] T046 [US6] 實作刪除功能在 ArticleViewer.vue（點擊刪除按鈕 → 顯示 ConfirmDialog → 確認後呼叫 usePost.deleteArticle → 導航到首頁）
-- [ ] T047 [US6] 實作刪除邏輯在 usePost composable 的 deleteArticle 方法中（移除文章、更新 localStorage、處理錯誤）
-- [ ] T048 [US6] 更新 TagSidebar 在文章刪除後自動更新標籤計數（響應式資料更新）
-- [ ] T049 [US6] 新增刪除成功提示（toast 通知或臨時訊息）在 pages/posts/[id].vue 中
+- [X] T045 [P] [US6] 建立 ConfirmDialog 元件在 components/ConfirmDialog.vue（顯示確認訊息、取消與確認按鈕、關閉邏輯）
+- [X] T046 [US6] 實作刪除功能在 ArticleViewer.vue（點擊刪除按鈕 → 顯示 ConfirmDialog → 確認後呼叫 usePost.deleteArticle → 導航到首頁）
+- [X] T047 [US6] 實作刪除邏輯在 usePost composable 的 deleteArticle 方法中（移除文章、更新 localStorage、處理錯誤）
+- [X] T048 [US6] 更新 TagSidebar 在文章刪除後自動更新標籤計數（響應式資料更新）
+- [X] T049 [US6] 新增刪除成功提示（toast 通知或臨時訊息）在 pages/posts/[id].vue 中
 
 **檢查點**：完整的 CRUD 功能全部實作完成
 
