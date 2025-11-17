@@ -58,48 +58,53 @@
       </nav>
     </header>
 
-    <!-- 主要內容區（左右佈局） -->
-    <div class="flex-1 flex overflow-hidden">
-      <!-- 主內容區 -->
-      <main class="flex-1 overflow-auto">
-        <!-- 行動版側邊欄 -->
-        <div
-          v-if="showMobileSidebar"
-          class="lg:hidden border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900"
-        >
-          <div class="px-4 py-4 space-y-3 max-h-64 overflow-y-auto">
-            <NuxtLink
-              to="/"
-              @click="showMobileSidebar = false"
-              class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-            >
-              所有文章
-            </NuxtLink>
-            <div
-              v-for="item in mobileTags"
-              :key="item.tag.id"
-              class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
-              @click="navigateToTag(item.tag.slug)"
-            >
-              <span class="text-sm">{{ item.tag.name }}</span>
-              <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
-                {{ item.count }}
-              </span>
-            </div>
+    <!-- 主要內容區 -->
+    <div class="flex-1 overflow-auto">
+      <!-- 行動版側邊欄 -->
+      <div
+        v-if="showMobileSidebar"
+        class="lg:hidden border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900"
+      >
+        <div class="px-4 py-4 space-y-3 max-h-64 overflow-y-auto">
+          <NuxtLink
+            to="/"
+            @click="showMobileSidebar = false"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            所有文章
+          </NuxtLink>
+          <div
+            v-for="item in mobileTags"
+            :key="item.tag.id"
+            class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
+            @click="navigateToTag(item.tag.slug)"
+          >
+            <span class="text-sm">{{ item.tag.name }}</span>
+            <span class="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full">
+              {{ item.count }}
+            </span>
           </div>
         </div>
+      </div>
 
-        <!-- 頁面內容 -->
-        <div class="w-full py-8">
-          <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-            <slot />
+      <!-- 頁面內容容器 (1280px 限制) -->
+      <div class="w-full py-8">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- 左右佈局：主內容 + 側邊欄 -->
+          <div class="flex gap-8">
+            <!-- 主內容區 -->
+            <main class="flex-1 min-w-0">
+              <slot />
+            </main>
+
+            <!-- 側邊欄 (桌面版 - 右側) -->
+            <aside class="hidden lg:block w-64 flex-shrink-0">
+              <div class="sticky top-20">
+                <TagSidebar :active-tag-slug="activeTagSlug" />
+              </div>
+            </aside>
           </div>
         </div>
-      </main>
-
-      <!-- 側邊欄 (桌面版 - 右側) -->
-      <div class="hidden lg:block w-64 border-l border-gray-200 dark:border-gray-800">
-        <TagSidebar :active-tag-slug="activeTagSlug" />
       </div>
     </div>
   </div>
