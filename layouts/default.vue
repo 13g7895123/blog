@@ -90,15 +90,15 @@
         </div>
 
         <!-- 頁面內容 -->
-        <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
-          <div class="max-w-[1280px] mx-auto">
+        <div class="w-full py-8">
+          <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
             <slot />
           </div>
         </div>
       </main>
 
       <!-- 側邊欄 (桌面版 - 右側) -->
-      <div class="hidden lg:block border-l border-gray-200 dark:border-gray-800">
+      <div class="hidden lg:block w-64 border-l border-gray-200 dark:border-gray-800">
         <TagSidebar :active-tag-slug="activeTagSlug" />
       </div>
     </div>
