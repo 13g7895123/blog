@@ -1,72 +1,67 @@
 <template>
-  <div class="flex h-screen bg-white dark:bg-gray-950">
-    <!-- 側邊欄 (桌面版) -->
-    <div class="hidden lg:block">
-      <TagSidebar :active-tag-slug="activeTagSlug" />
-    </div>
+  <div class="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
+    <!-- 頂部導航欄（滿版） -->
+    <header class="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-40">
+      <nav class="w-full px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <!-- Logo / Home -->
+        <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-80 transition">
+          <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17.25S6.5 28 12 28s10-4.745 10-10.75S17.5 6.253 12 6.253z" />
+          </svg>
+          <span class="text-lg font-bold text-gray-900 dark:text-white">部落格</span>
+        </NuxtLink>
 
-    <!-- 主要內容區 -->
-    <main class="flex-1 flex flex-col overflow-hidden">
-      <!-- 頂部導航欄 -->
-      <header class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <!-- Logo / Home -->
-          <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-80 transition">
-            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17.25S6.5 28 12 28s10-4.745 10-10.75S17.5 6.253 12 6.253z" />
-            </svg>
-            <span class="text-lg font-bold text-gray-900 dark:text-white">部落格</span>
+        <!-- 右側按鈕組 -->
+        <div class="flex items-center gap-3">
+          <!-- 新增文章按鈕 -->
+          <NuxtLink
+            to="/posts/new"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition"
+          >
+            新增文章
           </NuxtLink>
 
-          <!-- 右側按鈕組 -->
-          <div class="flex items-center gap-3">
-            <!-- 新增文章按鈕 -->
-            <NuxtLink
-              to="/posts/new"
-              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition"
+          <!-- 暗色模式切換 -->
+          <button
+            @click="toggleDarkMode"
+            class="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+            :title="isDark ? '切換為淺色模式' : '切換為暗色模式'"
+          >
+            <svg
+              v-if="isDark"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
             >
-              新增文章
-            </NuxtLink>
-
-            <!-- 暗色模式切換 -->
-            <button
-              @click="toggleDarkMode"
-              class="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
-              :title="isDark ? '切換為淺色模式' : '切換為暗色模式'"
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+            <svg
+              v-else
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
             >
-              <svg
-                v-if="isDark"
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-              <svg
-                v-else
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.536l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.828-2.828l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 111.414-1.414zM13 11a1 1 0 110 2h-1a1 1 0 110-2h1zm4-4a1 1 0 110 2v1a1 1 0 11-2 0v-1a1 1 0 012-1z" clip-rule="evenodd" />
-              </svg>
-            </button>
+              <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.536l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.828-2.828l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 111.414-1.414zM13 11a1 1 0 110 2h-1a1 1 0 110-2h1zm4-4a1 1 0 110 2v1a1 1 0 11-2 0v-1a1 1 0 012-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
 
-            <!-- 行動版側邊欄按鈕 -->
-            <button
-              @click="showMobileSidebar = !showMobileSidebar"
-              class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
-            </button>
-          </div>
-        </nav>
-      </header>
+          <!-- 行動版側邊欄按鈕 -->
+          <button
+            @click="showMobileSidebar = !showMobileSidebar"
+            class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </header>
 
-      <!-- 內容區 -->
-      <div class="flex-1 overflow-auto">
+    <!-- 主要內容區（左右佈局） -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- 主內容區 -->
+      <main class="flex-1 overflow-auto">
         <!-- 行動版側邊欄 -->
         <div
           v-if="showMobileSidebar"
@@ -95,11 +90,18 @@
         </div>
 
         <!-- 頁面內容 -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <slot />
+        <div class="w-full px-4 sm:px-6 lg:px-8 py-8">
+          <div class="max-w-7xl mx-auto">
+            <slot />
+          </div>
         </div>
+      </main>
+
+      <!-- 側邊欄 (桌面版 - 右側) -->
+      <div class="hidden lg:block border-l border-gray-200 dark:border-gray-800">
+        <TagSidebar :active-tag-slug="activeTagSlug" />
       </div>
-    </main>
+    </div>
   </div>
 </template>
 

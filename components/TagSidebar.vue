@@ -1,6 +1,6 @@
 <template>
-  <aside class="w-64 bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800">
-    <div class="p-6 space-y-6">
+  <aside class="w-64 bg-gray-50 dark:bg-gray-900 h-full">
+    <div class="p-6 space-y-6 sticky top-16">
       <!-- 標題 -->
       <div>
         <h2 class="text-lg font-bold text-gray-900 dark:text-white">
