@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
     <!-- 頂部導航欄（滿版） -->
     <header class="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-40">
-      <nav class="w-full px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <nav class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <!-- Logo / Home -->
         <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-80 transition">
           <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
