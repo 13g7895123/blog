@@ -31,12 +31,18 @@ export function usePost() {
     try {
       const data = await api.get<Article[]>('blog:articles')
       
-      // 按 createdAt 降冪排序（最新的在最前面）
-      articles.value = Array.isArray(data) 
-        ? data.sort((a, b) => 
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
+      // 確保每篇文章都有 tagIds（向後兼容舊資料）
+      const normalizedData = Array.isArray(data)
+        ? data.map(article => ({
+            ...article,
+            tagIds: Array.isArray(article.tagIds) ? article.tagIds : []
+          }))
         : []
+      
+      // 按 createdAt 降冪排序（最新的在最前面）
+      articles.value = normalizedData.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
       
       return articles.value
     } catch (e) {
@@ -54,19 +60,29 @@ export function usePost() {
    */
   async function getArticle(id: string): Promise<Article> {
     try {
-      const api = useApi()
       const article = articles.value.find(a => a.id === id)
       
       if (article) {
-        currentArticle.value = article
-        return article
+        // 確保有 tagIds
+        const normalizedArticle = {
+          ...article,
+          tagIds: Array.isArray(article.tagIds) ? article.tagIds : []
+        }
+        currentArticle.value = normalizedArticle
+        return normalizedArticle
       }
       
-      // 如果在記憶體中找不到，嘗試從存儲中讀取
-      const stored = await api.get<Article>(`articles:${id}`)
-      if (stored) {
-        currentArticle.value = stored
-        return stored
+      // 如果在記憶體中找不到，先載入所有文章
+      await fetchArticles()
+      const foundArticle = articles.value.find(a => a.id === id)
+      
+      if (foundArticle) {
+        const normalizedArticle = {
+          ...foundArticle,
+          tagIds: Array.isArray(foundArticle.tagIds) ? foundArticle.tagIds : []
+        }
+        currentArticle.value = normalizedArticle
+        return normalizedArticle
       }
       
       throw new NotFoundError('文章', id)
@@ -105,7 +121,7 @@ export function usePost() {
         content: input.content.trim(),
         createdAt: now,
         updatedAt: now,
-        tagIds: input.tagIds || []
+        tagIds: Array.isArray(input.tagIds) ? input.tagIds : []
       }
 
       // 儲存到 localStorage
@@ -156,9 +172,12 @@ export function usePost() {
         ...article,
         ...(input.title !== undefined && { title: input.title.trim() }),
         ...(input.content !== undefined && { content: input.content.trim() }),
-        ...(input.tagIds !== undefined && { tagIds: input.tagIds }),
-        updatedAt: new Date().toISOString()
-        // createdAt 保持不變
+        ...(input.tagIds !== undefined && { tagIds: Array.isArray(input.tagIds) ? input.tagIds : [] }),
+        updatedAt: new Date().toISOString(),
+        // 確保 tagIds 始終存在
+        tagIds: input.tagIds !== undefined 
+          ? (Array.isArray(input.tagIds) ? input.tagIds : [])
+          : (article.tagIds || [])
       }
 
       // 儲存到 localStorage
@@ -241,13 +260,28 @@ export function usePost() {
    */
   async function getArticleSummaries(): Promise<ArticleSummary[]> {
     try {
-      return articles.value.map(article => ({
-        id: article.id,
-        title: article.title,
-        excerpt: generateExcerpt(article.content, 200),
-        createdAt: article.createdAt,
-        tags: [] as Tag[] // 由元件透過 useTag 填充
-      }))
+      // 先確保有 tags 資料
+      const tagComposable = (await import('./useTag')).useTag()
+      await tagComposable.fetchTags()
+      const { getTagById } = tagComposable
+
+      return articles.value.map(article => {
+        // 確保 tagIds 存在，如果不存在則使用空陣列
+        const tagIds = article.tagIds || []
+        
+        // 將 tagIds 轉換為 Tag 物件
+        const articleTags = tagIds
+          .map(id => getTagById(id))
+          .filter((tag): tag is Tag => tag !== null)
+
+        return {
+          id: article.id,
+          title: article.title,
+          excerpt: generateExcerpt(article.content, 200),
+          createdAt: article.createdAt,
+          tags: articleTags
+        }
+      })
     } catch (e) {
       console.error('getArticleSummaries 失敗:', e)
       return []
