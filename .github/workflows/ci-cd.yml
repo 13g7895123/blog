@@ -62,9 +62,9 @@ jobs:
       - name: PHP Lint
         run: find app -name "*.php" -print0 | xargs -0 -n1 php -l || true
 
-  # Deploy via SSH with Blue-Green
+  # Deploy via SSH
   deploy:
-    name: Blue-Green Deploy
+    name: Deploy to Server
     runs-on: ubuntu-latest
     needs: [frontend, backend]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
@@ -78,11 +78,13 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
+          command_timeout: 30m
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
             
             echo "📥 Pulling latest code..."
-            git pull origin main || git pull origin master
+            git fetch origin
+            git reset --hard origin/main || git reset --hard origin/master
             
             echo "📝 Checking .env file..."
             if [ ! -f ".env" ]; then
@@ -90,9 +92,12 @@ jobs:
                 cp .env.example .env
             fi
             
-            echo "� Running Blue-Green Deployment..."
+            echo "🔧 Setting script permissions..."
             chmod +x scripts/*.sh
-            ./scripts/deploy.sh
+            
+            echo ""
+            echo "🚀 Starting all services..."
+            ./scripts/start.sh
             
             echo ""
             echo "📊 Final Status:"
