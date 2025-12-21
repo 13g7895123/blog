@@ -24,4 +24,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->get('tags', 'TagController::index');
     $routes->post('tags', 'TagController::create');
     $routes->delete('tags/(:segment)', 'TagController::delete/$1');
+
+    // System
+    $routes->get('system/tables', 'SystemController::tables');
+    $routes->get('system/health', 'SystemController::health');
 });

@@ -188,3 +188,45 @@
   "message": "標籤已刪除"
 }
 ```
+
+---
+
+### 3. System (系統)
+
+#### 取得資料表狀態
+顯示所有資料表結構與資料筆數。
+
+- **Method:** `GET`
+- **Path:** `/system/tables`
+- **Response:** `200 OK`
+```json
+{
+  "status": "ok",
+  "database": "blog",
+  "tableCount": 3,
+  "tables": [
+    {
+      "name": "articles",
+      "rowCount": 10,
+      "columnCount": 6,
+      "columns": [
+        { "name": "id", "type": "character varying", "maxLength": "36", ... }
+      ]
+    }
+  ]
+}
+```
+
+#### 系統健康檢查
+- **Method:** `GET`
+- **Path:** `/system/health`
+- **Response:** `200 OK`
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-12-21 10:00:00",
+  "database": "ok",
+  "php": "8.2.x",
+  "ci4": "4.6.4"
+}
+```
