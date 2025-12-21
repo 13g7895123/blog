@@ -72,10 +72,35 @@ class ViewsController extends BaseController
             ];
         }
 
+        // 每日瀏覽趨勢 (近30天)
+        $monthAgo = date('Y-m-d', strtotime('-30 days'));
+        $dailyQuery = $this->db->table('article_views')
+            ->select('DATE(viewed_at) as date, COUNT(*) as count')
+            ->where('viewed_at >=', $monthAgo)
+            ->groupBy('DATE(viewed_at)')
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $dailyViews = [];
+        $rawDaily = [];
+        foreach ($dailyQuery->getResult() as $row) {
+            $rawDaily[$row->date] = (int)$row->count;
+        }
+
+        // 填補缺失日期的數據為 0
+        for ($i = 0; $i < 30; $i++) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $dailyViews[$date] = $rawDaily[$date] ?? 0;
+        }
+
+        // 依照日期排序 (舊到新)
+        ksort($dailyViews);
+
         return $this->response->setJSON([
             'todayViews' => $todayViews,
             'totalViews' => $totalViews,
             'popularArticles' => $popularArticles,
+            'dailyViews' => $dailyViews,
         ]);
     }
 }
