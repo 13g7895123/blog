@@ -83,6 +83,20 @@
         ]
         ```
 
+### 3. 設定 (Settings) [NEW]
+
+| 方法 | 路徑 | 描述 | 參數/Body | 回傳值 |
+|------|------|------|-----------|--------|
+| GET | `/api/settings` | 取得網站設定 (標題、描述) | - | `{ "blog_title": "...", "blog_description": "..." }` |
+| POST | `/api/settings` | 更新網站設定 | `{ "blog_title": "...", "blog_description": "..." }` | `message` |
+
+### 4. 文章篩選 (Article Filtering) [MISSING]
+
+- **依標籤篩選文章 (`/api/articles?tag={slug}`)**
+    - 描述：首頁點擊標籤時，需只顯示該標籤的文章。
+    - 目前狀態：後端 API 尚未實作此 Query Parameter。
+    - 需求：修改 `GET /api/articles`，若帶有 `tag` 參數（Slug），則只回傳包含該標籤的文章。
+
 ## 錯誤處理
 
 API 應回傳適當的 HTTP 狀態碼：

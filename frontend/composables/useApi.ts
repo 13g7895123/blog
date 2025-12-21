@@ -88,11 +88,17 @@ export function useApi() {
     }
   }
 
+  // Settings
+  const getSettings = () => useFetch('/api/settings')
+  const updateSettings = (settings: any) => $fetch('/api/settings', { method: 'POST', body: settings })
+
   return {
     get,
     post,
     put,
     remove,
+    getSettings,
+    updateSettings,
     // 相容舊介面 (set 改為 post/put, clear 不支援)
     isAvailable: async () => true
   }

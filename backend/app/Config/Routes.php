@@ -54,3 +54,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api', 'filter' => 'auth']
 // Public Routes (Comments)
 $routes->get('api/articles/(:segment)/comments', 'Api\CommentController::index/$1');
 $routes->post('api/articles/(:segment)/comments', 'Api\CommentController::create/$1');
+
+// Settings
+$routes->get('api/settings', 'Api\SettingController::index');
+$routes->post('api/settings', 'Api\SettingController::update', ['filter' => 'auth']);

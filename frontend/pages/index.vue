@@ -6,10 +6,10 @@
         <div class="flex items-center justify-between mb-4">
           <div>
             <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-2">
-              部落格
+              {{ blogTitle }}
             </h1>
             <p class="text-lg text-gray-600 dark:text-gray-400">
-              探索最新的文章和想法
+              {{ blogDescription }}
             </p>
           </div>
           <div></div>
@@ -70,6 +70,7 @@ import type { ArticleSummary } from '~/types/article'
 
 // 使用 Nuxt 自動導入
 declare const usePost: any
+declare const useApi: any
 declare const definePageMeta: any
 
 definePageMeta({
@@ -81,9 +82,28 @@ const isLoading = ref(true)
 const error = ref<string | null>(null)
 const summaries = ref<ArticleSummary[]>([])
 
+const blogTitle = ref('部落格')
+const blogDescription = ref('探索最新的文章和想法')
+
 // 取得 composables
 const post = usePost()
+const { getSettings } = useApi()
 const { fetchArticles: loadAllArticles, getArticleSummaries } = post
+
+/**
+ * 載入網站設定
+ */
+const loadSettings = async () => {
+  try {
+    const { data } = await getSettings()
+    if (data.value) {
+      if (data.value.blog_title) blogTitle.value = data.value.blog_title
+      if (data.value.blog_description) blogDescription.value = data.value.blog_description
+    }
+  } catch (e) {
+    console.error('載入設定失敗', e)
+  }
+}
 
 /**
  * 載入文章列表
@@ -93,11 +113,15 @@ const loadArticles = async () => {
   error.value = null
 
   try {
-    // 先從 localStorage 取得所有文章
-    await loadAllArticles()
+    // 平行載入設定與文章
+    const [_, articles] = await Promise.all([
+      loadSettings(),
+      (async () => {
+        await loadAllArticles()
+        return await getArticleSummaries()
+      })()
+    ])
 
-    // 生成摘要
-    const articles = await getArticleSummaries()
     summaries.value = articles
   } catch (err) {
     console.error('載入文章失敗:', err)

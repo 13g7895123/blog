@@ -178,16 +178,17 @@ onMounted(() => {
   @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300;
 }
 
+/* 程式碼區塊樣式調整：淺背景灰底字 */
 .prose code {
-  @apply bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm;
+  @apply bg-gray-100 dark:bg-gray-200 px-2 py-1 rounded text-sm text-gray-900 dark:text-gray-900;
 }
 
 .prose pre {
-  @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto;
+  @apply bg-gray-100 dark:bg-gray-200 p-4 rounded-lg overflow-x-auto;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0;
+  @apply bg-transparent p-0 text-gray-900 dark:text-gray-900;
 }
 
 .prose blockquote {
@@ -200,7 +201,7 @@ onMounted(() => {
 
 .prose th,
 .prose td {
-  @apply border border-gray-300 dark:border-gray-700 p-2;
+  @apply border border-gray-300 dark:border-gray-700 p-2 text-gray-900 dark:text-gray-100 box-border;
 }
 
 .prose th {
@@ -208,6 +209,6 @@ onMounted(() => {
 }
 
 .prose-content {
-  @apply prose prose-sm dark:prose-invert max-w-none;
+  @apply prose prose-lg dark:prose-invert max-w-none;
 }
 </style>
