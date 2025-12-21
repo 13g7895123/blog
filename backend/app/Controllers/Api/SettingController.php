@@ -46,10 +46,17 @@ class SettingController extends BaseController
             // Only allow specific keys for now to prevent pollution? Or allow all?
             // Allow blog_title and blog_description for now.
             if (in_array($key, ['blog_title', 'blog_description'])) {
-                $this->model->save([
+                // Check if exists first to decide insert or update, or use replace/save mechanism correctly
+                // Model 'save' handles update if primary key is present. Our PK is 'key'.
+                $existing = $this->model->find($key);
+                $saveData = [
                     'key' => $key,
                     'value' => $value,
-                ]);
+                ];
+
+                if (!$this->model->save($saveData)) {
+                    // log error?
+                }
             }
         }
 

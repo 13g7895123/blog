@@ -161,51 +161,70 @@ onMounted(() => {
 
 <style scoped>
 /* Prose 樣式 */
-.prose {
+/* Prose 樣式 - 使用 :deep() 穿透 v-html 內容 */
+:deep(.prose) {
   @apply text-gray-900 dark:text-gray-100;
 }
 
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4,
-.prose h5,
-.prose h6 {
-  @apply text-gray-900 dark:text-white;
+:deep(.prose h1),
+:deep(.prose h2),
+:deep(.prose h3),
+:deep(.prose h4),
+:deep(.prose h5),
+:deep(.prose h6) {
+  @apply text-gray-900 dark:text-white font-bold scroll-mt-20;
 }
 
-.prose a {
+:deep(.prose a) {
   @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300;
 }
 
 /* 程式碼區塊樣式調整：淺背景灰底字 */
-.prose code {
-  @apply bg-gray-100 dark:bg-gray-200 px-2 py-1 rounded text-sm text-gray-900 dark:text-gray-900;
+:deep(.prose code) {
+  @apply bg-gray-100 dark:bg-gray-200 px-1.5 py-0.5 rounded text-sm text-gray-900 dark:text-gray-900 font-mono;
 }
 
-.prose pre {
-  @apply bg-gray-100 dark:bg-gray-200 p-4 rounded-lg overflow-x-auto;
+:deep(.prose pre) {
+  @apply bg-gray-100 dark:bg-gray-200 p-4 rounded-lg overflow-x-auto my-4;
 }
 
-.prose pre code {
-  @apply bg-transparent p-0 text-gray-900 dark:text-gray-900;
+:deep(.prose pre code) {
+  @apply bg-transparent p-0 text-gray-900 dark:text-gray-900 text-sm;
 }
 
-.prose blockquote {
-  @apply border-l-4 border-blue-500 pl-4 italic text-gray-700 dark:text-gray-300;
+:deep(.prose blockquote) {
+  @apply border-l-4 border-blue-500 pl-4 py-1 my-4 italic text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 rounded-r;
 }
 
-.prose table {
-  @apply w-full border-collapse;
+:deep(.prose table) {
+  @apply w-full border-collapse my-4;
 }
 
-.prose th,
-.prose td {
-  @apply border border-gray-300 dark:border-gray-700 p-2 text-gray-900 dark:text-gray-100 box-border;
+:deep(.prose th),
+:deep(.prose td) {
+  @apply border border-gray-300 dark:border-gray-700 p-2 text-gray-900 dark:text-gray-100;
 }
 
-.prose th {
+:deep(.prose th) {
   @apply bg-gray-100 dark:bg-gray-800 font-semibold;
+}
+
+:deep(.prose-content > *:first-child) {
+  @apply mt-0;
+}
+
+/* 為了讓 Tailwind Typography 的預設樣式不干擾，我們可以強制指定顏色 */
+:deep(.prose strong) {
+  @apply text-gray-900 dark:text-white;
+}
+
+:deep(.prose ul),
+:deep(.prose ol) {
+  @apply my-4 pl-6;
+}
+
+:deep(.prose li) {
+  @apply my-1;
 }
 
 .prose-content {

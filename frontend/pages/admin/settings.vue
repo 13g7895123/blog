@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="w-full py-8 px-4">
         <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">網站設定</h1>
 
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
