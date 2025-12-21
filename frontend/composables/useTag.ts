@@ -98,7 +98,7 @@ export function useTag() {
     getTagBySlug: (slug: string) => tags.value.find(t => t.slug === slug) || null,
     getActiveTagsWithCount: async () => {
       const stats = await getTagsWithCount()
-      return stats.filter(s => s.count > 0)
+      return (stats || []).filter(s => s.count > 0)
     }
   }
 }

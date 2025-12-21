@@ -35,6 +35,11 @@ export function useApi() {
       handleError(error.value, endpoint)
     }
 
+    // 確保不回傳 null，對陣列類型回傳空陣列
+    if (data.value === null) {
+      return [] as unknown as T
+    }
+
     return data.value as T
   }
 
