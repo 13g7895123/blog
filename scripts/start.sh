@@ -54,6 +54,15 @@ echo "   Backend: HTTP $BACKEND_STATUS"
 echo ""
 if [ "$NGINX_STATUS" = "200" ] || [ "$NGINX_STATUS" = "304" ]; then
     echo "✅ Blog Application Started Successfully!"
+
+    # Run database migrations
+    echo ""
+    echo "🔄 Running database migrations..."
+    if docker compose exec -T backend php spark migrate; then
+        echo "✅ Database migrations completed successfully!"
+    else
+        echo "⚠️  Database migrations failed!"
+    fi
 else
     echo "⚠️  Some services may not be ready. Check logs with: docker compose logs"
 fi
