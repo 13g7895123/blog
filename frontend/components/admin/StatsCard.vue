@@ -1,8 +1,8 @@
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 transition hover:shadow-xl">
     <div class="flex items-center justify-between mb-4">
-      <div class="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20">
-        <slot name="icon" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+      <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 text-blue-600 dark:text-blue-400">
+        <slot name="icon" />
       </div>
       <span v-if="trend" :class="[
         'text-xs font-bold px-2 py-1 rounded-full',
