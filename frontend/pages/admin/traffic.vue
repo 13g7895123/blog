@@ -1,88 +1,73 @@
 <template>
-    <div class="w-full py-8 px-4">
-        <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">流量記錄</h1>
-
-        <!-- 篩選 -->
-        <div class="mb-6 flex flex-wrap gap-4 items-center">
-            <select v-model="selectedArticle" @change="loadLogs"
-                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500">
-                <option value="">全部文章</option>
-                <option v-for="article in articles" :key="article.id" :value="article.id">
-                    {{ article.title }}
-                </option>
-            </select>
-            <span class="text-sm text-gray-500 dark:text-gray-400">
-                共 {{ logs.length }} 筆記錄
-            </span>
+    <div>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">流量記錄</h2>
         </div>
 
-        <!-- 表格 -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                文章
-                            </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                IP 位址
-                            </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                User Agent
-                            </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                時間
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        <tr v-if="loading">
-                            <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                載入中...
-                            </td>
-                        </tr>
-                        <tr v-else-if="logs.length === 0">
-                            <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                尚無瀏覽記錄
-                            </td>
-                        </tr>
-                        <tr v-for="log in logs" :key="log.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                                {{ log.article_title || '(已刪除)' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600 dark:text-gray-300">
-                                {{ log.ip_address }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate"
-                                :title="log.user_agent">
-                                {{ log.user_agent }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                {{ formatDate(log.viewed_at) }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- 篩選器 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-4 mb-6">
+            <div class="flex flex-wrap gap-4 items-center">
+                <label class="flex items-center gap-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">文章篩選：</span>
+                    <select v-model="selectedArticle" @change="loadLogs"
+                        class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 text-sm">
+                        <option value="">全部文章</option>
+                        <option v-for="article in articles" :key="article.id" :value="article.id">
+                            {{ article.title }}
+                        </option>
+                    </select>
+                </label>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    共 {{ logs.length }} 筆記錄
+                </span>
             </div>
         </div>
+
+        <!-- 流量記錄表格 -->
+        <DataTable :data="logs" :columns="columns" :loading="loading" :page-size="20"
+            :search-keys="['article_title', 'ip_address']" search-placeholder="搜尋文章或 IP..." empty-text="尚無瀏覽記錄"
+            row-key="id" @refresh="loadLogs">
+            <!-- 文章欄位 -->
+            <template #cell-article_title="{ value }">
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {{ value || '(已刪除)' }}
+                </span>
+            </template>
+
+            <!-- IP 欄位 -->
+            <template #cell-ip_address="{ value }">
+                <code
+                    class="text-sm font-mono text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">
+          {{ value }}
+        </code>
+            </template>
+
+            <!-- User Agent 欄位 -->
+            <template #cell-user_agent="{ value }">
+                <span class="text-sm text-gray-500 dark:text-gray-400 block max-w-xs truncate" :title="value">
+                    {{ value }}
+                </span>
+            </template>
+
+            <!-- 時間欄位 -->
+            <template #cell-viewed_at="{ value }">
+                <span class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    {{ formatDate(value) }}
+                </span>
+            </template>
+        </DataTable>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import DataTable from '~/components/admin/DataTable.vue'
+import type { Column } from '~/components/admin/DataTable.vue'
 
 definePageMeta({
-    layout: 'admin'
+    layout: 'admin',
+    middleware: ['auth']
 })
-
-// 使用 Nuxt 自動導入
-declare const definePageMeta: any
-declare const $fetch: any
 
 interface ViewLog {
     id: number
@@ -103,10 +88,18 @@ const articles = ref<Article[]>([])
 const selectedArticle = ref('')
 const loading = ref(true)
 
+// DataTable 欄位定義
+const columns: Column[] = [
+    { key: 'article_title', label: '文章', sortable: true },
+    { key: 'ip_address', label: 'IP 位址', sortable: true },
+    { key: 'user_agent', label: 'User Agent', hideOnMobile: true },
+    { key: 'viewed_at', label: '時間', sortable: true }
+]
+
 // 載入文章列表
 const loadArticles = async () => {
     try {
-        const data = await $fetch('/api/articles')
+        const data = await $fetch<Article[]>('/api/articles')
         articles.value = data
     } catch (e) {
         console.error('載入文章列表失敗', e)
@@ -121,9 +114,9 @@ const loadLogs = async () => {
         if (selectedArticle.value) {
             params.set('article_id', selectedArticle.value)
         }
-        params.set('limit', '200')
+        params.set('limit', '500')
 
-        const data = await $fetch(`/api/views/logs?${params.toString()}`)
+        const data = await $fetch<ViewLog[]>(`/api/views/logs?${params.toString()}`)
         logs.value = data
     } catch (e) {
         console.error('載入流量記錄失敗', e)
@@ -133,6 +126,7 @@ const loadLogs = async () => {
 }
 
 const formatDate = (dateStr: string) => {
+    if (!dateStr) return '-'
     return new Date(dateStr).toLocaleString('zh-TW', {
         year: 'numeric',
         month: '2-digit',
