@@ -80,32 +80,79 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           command_timeout: 30m
           script: |
-            cd ${{ secrets.DEPLOY_PATH }}
+            DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+            REPO_URL="git@github.com:${{ github.repository }}.git"
             
-            echo "📥 Pulling latest code..."
+            echo "=========================================="
+            echo "🚀 開始部署"
+            echo "=========================================="
+            
+            # 檢查目錄是否存在
+            if [ ! -d "$DEPLOY_PATH" ]; then
+                echo "📁 專案目錄不存在，正在初始化..."
+                mkdir -p "$(dirname $DEPLOY_PATH)"
+                git clone "$REPO_URL" "$DEPLOY_PATH"
+            fi
+            
+            cd "$DEPLOY_PATH"
+            
+            echo ""
+            echo "📥 拉取最新程式碼..."
             git fetch origin
             
-            echo "🧹 Cleaning untracked files and directories..."
-            # -f: force, -d: directories, -x: include ignored files
-            # Exclude .env, uploads, writable, and data (database) folders from cleaning
+            echo ""
+            echo "🧹 清理未追蹤的文件..."
             git clean -fdx -e .env -e .env.local -e writable/ -e uploads/ -e data/
             
-            echo "🔄 Resetting to latest commit..."
+            echo ""
+            echo "🔄 重置到最新提交..."
             git reset --hard origin/main || git reset --hard origin/master
             
-            echo "📝 Checking .env file..."
+            echo ""
+            echo "📝 檢查環境設定..."
             if [ ! -f ".env" ]; then
-                echo "Creating .env from .env.example..."
+                echo "   建立 .env..."
                 cp .env.example .env
             fi
             
-            echo "🔧 Setting script permissions..."
+            echo ""
+            echo "🔧 設定腳本權限..."
             chmod +x scripts/*.sh
             
             echo ""
-            echo "🚀 Starting all services..."
-            ./scripts/start.sh
+            echo "🐳 啟動 Docker 服務..."
+            docker compose down --remove-orphans 2>/dev/null || true
+            docker compose up -d --build
             
             echo ""
-            echo "📊 Final Status:"
-            ./scripts/status.sh
+            echo "⏳ 等待服務啟動 (30秒)..."
+            sleep 30
+            
+            echo ""
+            echo "🗄️ 執行資料庫遷移..."
+            if docker compose exec -T backend php spark migrate --all; then
+                echo "✅ 資料庫遷移完成！"
+            else
+                echo "⚠️ 資料庫遷移失敗，請檢查日誌"
+            fi
+            
+            echo ""
+            echo "📊 服務狀態："
+            docker compose ps
+            
+            echo ""
+            echo "🏥 健康檢查："
+            NGINX_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${NGINX_PORT:-8000}" 2>/dev/null || echo "000")
+            BACKEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${BACKEND_PORT:-8080}" 2>/dev/null || echo "000")
+            echo "   Nginx:   HTTP $NGINX_STATUS"
+            echo "   Backend: HTTP $BACKEND_STATUS"
+            
+            echo ""
+            echo "=========================================="
+            if [ "$NGINX_STATUS" = "200" ] || [ "$NGINX_STATUS" = "304" ]; then
+                echo "✅ 部署成功！"
+            else
+                echo "⚠️ 部署可能有問題，請檢查日誌"
+                echo "   docker compose logs -f"
+            fi
+            echo "=========================================="
