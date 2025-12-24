@@ -29,7 +29,7 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check if backend container is running
+# Find backend container
 BACKEND_CONTAINER=$(docker ps --filter "name=blog-backend" --format "{{.Names}}" | head -n 1)
 
 if [ -z "$BACKEND_CONTAINER" ]; then
@@ -38,8 +38,22 @@ if [ -z "$BACKEND_CONTAINER" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}✓ 找到 Backend 容器：${BACKEND_CONTAINER}${NC}"
+# Find database container
+DB_CONTAINER=$(docker ps --filter "name=blog-db" --format "{{.Names}}" | head -n 1)
+
+if [ -z "$DB_CONTAINER" ]; then
+    echo -e "${RED}❌ 資料庫容器未運行。${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✓ Backend 容器：${BACKEND_CONTAINER}${NC}"
+echo -e "${GREEN}✓ 資料庫容器：${DB_CONTAINER}${NC}"
 echo ""
+
+# Load environment variables
+source .env 2>/dev/null || source .env.local 2>/dev/null || true
+DB_NAME="${POSTGRES_DB:-blog}"
+DB_USER="${POSTGRES_USER:-blog_user}"
 
 # Get user input
 echo -e "${CYAN}請輸入管理員資訊：${NC}"
@@ -55,6 +69,13 @@ fi
 # Validate email format
 if ! echo "$ADMIN_EMAIL" | grep -qE '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'; then
     echo -e "${RED}❌ Email 格式不正確${NC}"
+    exit 1
+fi
+
+# Check if user already exists
+EXISTING=$(docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -t -c "SELECT COUNT(*) FROM users WHERE email = '$ADMIN_EMAIL';" 2>/dev/null | tr -d ' ')
+if [ "$EXISTING" != "0" ] && [ -n "$EXISTING" ]; then
+    echo -e "${RED}❌ 此 Email 已存在${NC}"
     exit 1
 fi
 
@@ -85,92 +106,35 @@ echo ""
 echo -e "${YELLOW}正在建立管理員帳號...${NC}"
 
 # Generate UUID
-UUID=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || echo "$(date +%s)-$(shuf -i 1000-9999 -n 1)")
+UUID=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen 2>/dev/null || date +%s%N | sha256sum | head -c 36)
 
-# Create admin user via PHP
-docker exec "$BACKEND_CONTAINER" php -r "
-<?php
-require '/var/www/html/vendor/autoload.php';
+# Hash password using PHP in backend container
+HASHED_PASSWORD=$(docker exec "$BACKEND_CONTAINER" php -r "echo password_hash('$ADMIN_PASSWORD', PASSWORD_DEFAULT);" 2>/dev/null)
 
-\$app = require '/var/www/html/app/Config/Paths.php';
-\$app = require '/var/www/html/public/index.php';
-
-use App\Models\UserModel;
-
-\$model = new UserModel();
-
-// Check if user already exists
-\$existing = \$model->where('email', '$ADMIN_EMAIL')->first();
-if (\$existing) {
-    echo 'USER_EXISTS';
-    exit(1);
-}
-
-// Create new admin user
-\$result = \$model->insert([
-    'id' => '$UUID',
-    'email' => '$ADMIN_EMAIL',
-    'password' => password_hash('$ADMIN_PASSWORD', PASSWORD_DEFAULT),
-    'name' => '$ADMIN_NAME',
-    'created_at' => date('Y-m-d H:i:s'),
-    'updated_at' => date('Y-m-d H:i:s'),
-]);
-
-if (\$result) {
-    echo 'SUCCESS';
-} else {
-    echo 'FAILED';
-    exit(1);
-}
-" 2>/dev/null
-
-# Alternative method using spark command if available
-if [ $? -ne 0 ]; then
-    # Try using direct database connection
-    echo -e "${YELLOW}嘗試直接寫入資料庫...${NC}"
-    
-    # Get database credentials from docker-compose
-    source .env 2>/dev/null || true
-    DB_HOST="${POSTGRES_HOST:-db}"
-    DB_NAME="${POSTGRES_DB:-blog}"
-    DB_USER="${POSTGRES_USER:-blog_user}"
-    DB_PASS="${POSTGRES_PASSWORD:-blog_password}"
-    
-    # Hash password using PHP
-    HASHED_PASSWORD=$(docker exec "$BACKEND_CONTAINER" php -r "echo password_hash('$ADMIN_PASSWORD', PASSWORD_DEFAULT);")
-    
-    # Get database container
-    DB_CONTAINER=$(docker ps --filter "name=blog-db" --format "{{.Names}}" | head -n 1)
-    
-    if [ -z "$DB_CONTAINER" ]; then
-        echo -e "${RED}❌ 找不到資料庫容器${NC}"
-        exit 1
-    fi
-    
-    # Insert user using psql
-    docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -c "
-        INSERT INTO users (id, email, password, name, created_at, updated_at)
-        VALUES ('$UUID', '$ADMIN_EMAIL', '$HASHED_PASSWORD', '$ADMIN_NAME', NOW(), NOW())
-        ON CONFLICT (email) DO NOTHING;
-    " 2>/dev/null
-    
-    if [ $? -eq 0 ]; then
-        echo ""
-        echo -e "${GREEN}✅ 管理員帳號建立成功！${NC}"
-    else
-        echo -e "${RED}❌ 建立失敗${NC}"
-        exit 1
-    fi
-else
-    echo ""
-    echo -e "${GREEN}✅ 管理員帳號建立成功！${NC}"
+if [ -z "$HASHED_PASSWORD" ]; then
+    echo -e "${RED}❌ 密碼加密失敗${NC}"
+    exit 1
 fi
 
-echo ""
-echo -e "${BLUE}========================================${NC}"
-echo -e "${CYAN}帳號資訊：${NC}"
-echo -e "  Email: ${GREEN}$ADMIN_EMAIL${NC}"
-echo -e "  名稱:  ${GREEN}$ADMIN_NAME${NC}"
-echo -e "${BLUE}========================================${NC}"
-echo ""
-echo -e "${YELLOW}💡 現在可以前往 /login 頁面登入${NC}"
+# Insert user using psql
+RESULT=$(docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -c "
+INSERT INTO users (id, email, password, name, created_at, updated_at)
+VALUES ('$UUID', '$ADMIN_EMAIL', '$HASHED_PASSWORD', '$ADMIN_NAME', NOW(), NOW());
+" 2>&1)
+
+if echo "$RESULT" | grep -q "INSERT"; then
+    echo ""
+    echo -e "${GREEN}✅ 管理員帳號建立成功！${NC}"
+    echo ""
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${CYAN}帳號資訊：${NC}"
+    echo -e "  Email: ${GREEN}$ADMIN_EMAIL${NC}"
+    echo -e "  名稱:  ${GREEN}$ADMIN_NAME${NC}"
+    echo -e "${BLUE}========================================${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 現在可以前往 /login 頁面登入${NC}"
+else
+    echo -e "${RED}❌ 建立失敗：${NC}"
+    echo "$RESULT"
+    exit 1
+fi
